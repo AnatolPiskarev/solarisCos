@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             if (requestCode == PICK_IMAGE) {
                 val imageView = findViewById(R.id.imgView) as ImageView
                 val uri = data.data
-               originalImage = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                originalImage = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
                 currentImage = originalImage
                 imageView.setImageBitmap(originalImage)
                 solBtn.isEnabled = true
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 grayBtn.setOnClickListener {
                     currentImage = imgService.toShadesOfGray(originalImage)
                     imageView.setImageBitmap(currentImage)
-                    }
+                }
                 statBtn.setOnClickListener {
                     showStats(originalImage)
                 }
@@ -83,11 +83,9 @@ class MainActivity : AppCompatActivity() {
                     imageView.setImageBitmap(currentImage)
                 }
                 originBtn.setOnClickListener {
-                    currentImage.recycle()
                     imageView.setImageBitmap(originalImage)
                     currentImage = originalImage
                 }
-
             }
         } catch (e: Exception) {
             Log.e("error", e.message)
