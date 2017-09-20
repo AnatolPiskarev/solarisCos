@@ -60,6 +60,11 @@ class ImageService {
         }
     }
 
+    fun stampFilter(bitMap: Bitmap): Bitmap {
+        val kernel: Array<DoubleArray> = arrayOf(doubleArrayOf(0.0, 1.0, 0.0), doubleArrayOf(1.0, 0.0, -1.0), doubleArrayOf(0.0, -1.0, 0.0))
+        return ConvolutionMatrix().computeConvolution3x3(bitMap, kernel)
+    }
+
     private fun solarize(pixel: Int): Int {
         val R = solarizePixel(Color.red(pixel))
         val G = solarizePixel(Color.green(pixel))
