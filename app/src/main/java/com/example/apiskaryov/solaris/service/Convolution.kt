@@ -10,12 +10,12 @@ class ConvolutionMatrix {
 
     var Factor = 1.0
     var Offset = 1.0
-    private val SIZE = 3
 
     fun computeConvolution3x3(src: Bitmap, kernel: Array<DoubleArray>): Bitmap {
         val width = src.width
         val height = src.height
         val result = Bitmap.createBitmap(width, height, src.config)
+        val SIZE = kernel.size
 
         var A: Int
         var R: Int
@@ -73,7 +73,6 @@ class ConvolutionMatrix {
                 } else if (B > 255) {
                     B = 255
                 }
-
                 // apply new pixel
                 result.setPixel(x + 1, y + 1, Color.argb(A, R, G, B))
             }

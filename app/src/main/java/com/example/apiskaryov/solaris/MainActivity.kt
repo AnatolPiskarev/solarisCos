@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var stampBtn: Button
     private lateinit var statBtn: Button
     private lateinit var originBtn: Button
+    private lateinit var binaryBtn: Button
     private lateinit var originalImage: Bitmap
     private lateinit var currentImage: Bitmap
 
@@ -31,11 +32,13 @@ class MainActivity : AppCompatActivity() {
         stampBtn = findViewById(R.id.StampBtn) as Button
         statBtn = findViewById(R.id.StatBtn) as Button
         originBtn = findViewById(R.id.OrigBtn) as Button
+        binaryBtn = findViewById(R.id.BinaryBtn) as Button
         grayBtn.isEnabled = false
         originBtn.isEnabled = false
         solBtn.isEnabled = false
         stampBtn.isEnabled = false
         statBtn.isEnabled = false
+        binaryBtn.isEnabled = false
         super.onCreate(savedInstanceState)
         mainBtn.setOnClickListener {
             val intent = Intent().apply {
@@ -59,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 originBtn.isEnabled = true
                 stampBtn.isEnabled = true
                 statBtn.isEnabled = true
+                binaryBtn.isEnabled = true
                 grayBtn.setOnClickListener {
                     currentImage = imgService.toShadesOfGray(originalImage)
                     imageView.setImageBitmap(currentImage)
@@ -74,11 +78,16 @@ class MainActivity : AppCompatActivity() {
                     currentImage = imgService.stampFilter(originalImage)
                     imageView.setImageBitmap(currentImage)
                 }
+                binaryBtn.setOnClickListener {
+                    currentImage = imgService.toBinary(originalImage)
+                    imageView.setImageBitmap(currentImage)
+                }
                 originBtn.setOnClickListener {
                     currentImage.recycle()
                     imageView.setImageBitmap(originalImage)
                     currentImage = originalImage
                 }
+
             }
         } catch (e: Exception) {
             Log.e("error", e.message)
