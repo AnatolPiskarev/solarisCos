@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binaryBtn: Button
     private lateinit var originalImage: Bitmap
     private lateinit var currentImage: Bitmap
+    private lateinit var spoonButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
@@ -33,12 +34,15 @@ class MainActivity : AppCompatActivity() {
         statBtn = findViewById(R.id.StatBtn) as Button
         originBtn = findViewById(R.id.OrigBtn) as Button
         binaryBtn = findViewById(R.id.BinaryBtn) as Button
+        spoonButton = findViewById(R.id.SpoonBtn) as Button
         grayBtn.isEnabled = false
         originBtn.isEnabled = false
         solBtn.isEnabled = false
         stampBtn.isEnabled = false
         statBtn.isEnabled = false
         binaryBtn.isEnabled = false
+        spoonButton.isEnabled = false
+
         super.onCreate(savedInstanceState)
         mainBtn.setOnClickListener {
             val intent = Intent().apply {
@@ -63,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 stampBtn.isEnabled = true
                 statBtn.isEnabled = true
                 binaryBtn.isEnabled = true
+                spoonButton.isEnabled = true
                 grayBtn.setOnClickListener {
                     currentImage = imgService.toShadesOfGray(originalImage)
                     imageView.setImageBitmap(currentImage)
@@ -79,12 +84,16 @@ class MainActivity : AppCompatActivity() {
                     imageView.setImageBitmap(currentImage)
                 }
                 binaryBtn.setOnClickListener {
-                    currentImage = imgService.toBinary(originalImage)
+                    currentImage = imgService.toPseudoBinary(originalImage)
                     imageView.setImageBitmap(currentImage)
                 }
                 originBtn.setOnClickListener {
                     imageView.setImageBitmap(originalImage)
                     currentImage = originalImage
+                }
+                spoonButton.setOnClickListener {
+                    currentImage = imgService.toBinary(originalImage)
+                    imageView.setImageBitmap(currentImage)
                 }
             }
         } catch (e: Exception) {
