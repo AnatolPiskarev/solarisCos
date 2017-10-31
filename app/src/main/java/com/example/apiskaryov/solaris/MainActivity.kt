@@ -9,6 +9,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import com.example.apiskaryov.solaris.service.ImageService
+import org.opencv.android.LoaderCallbackInterface
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.core.Mat
+import org.opencv.android.OpenCVLoader
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,8 +30,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var originalImage: Bitmap
     private lateinit var currentImage: Bitmap
     private lateinit var spoonButton: Button
+    private lateinit var mLoaderCallback :BaseLoaderCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        mLoaderCallback = object : BaseLoaderCallback(this) {
+            override fun onManagerConnected(status: Int) {
+                when (status) {
+                    LoaderCallbackInterface.SUCCESS -> {
+                        Mat()
+                    }
+                    else -> {
+                        super.onManagerConnected(status)
+                    }
+                }
+            }
+        }
+
         setContentView(R.layout.activity_main)
         mainBtn = findViewById(R.id.imgBtn) as Button
         grayBtn = findViewById(R.id.grayBtn) as Button
@@ -51,6 +72,12 @@ class MainActivity : AppCompatActivity() {
             }
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
         }
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        //Вызываем асинхронный загрузчик библиотеки
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this, mLoaderCallback)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -84,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     imageView.setImageBitmap(currentImage)
                 }
                 binaryBtn.setOnClickListener {
-                    currentImage = imgService.toPseudoBinary(originalImage)
+                    currentImage = imgService.toBinary2(originalImage)
                     imageView.setImageBitmap(currentImage)
                 }
                 originBtn.setOnClickListener {
@@ -92,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                     currentImage = originalImage
                 }
                 spoonButton.setOnClickListener {
-                    currentImage = imgService.toBinary(originalImage)
+                    currentImage = imgService.toBinary2(originalImage)
                     imageView.setImageBitmap(currentImage)
                 }
             }

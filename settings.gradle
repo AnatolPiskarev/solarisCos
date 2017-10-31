@@ -1,1 +1,3 @@
+include ':app', 'OpenCV'
 include ':app'
+include ':openCV'

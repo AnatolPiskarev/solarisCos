@@ -80,4 +80,42 @@ class ConvolutionMatrix {
         // final image
         return result
     }
+
+    fun binaryConvolution2x2(bitmap: Bitmap, kernel: Array<IntArray>): Bitmap {
+        val result = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
+        (0 until bitmap.height).forEach { h ->
+            (0 until bitmap.width - 1 step 2).forEach { w ->
+                val pCurrent = bitmap.getPixel(w, h)
+                val pNext = bitmap.getPixel(w + 1, h)
+                if (h % 2 == 0) {
+                    result.setPixel(w, h, convertPixelToBinary(kernel[1][0], pCurrent))
+                    result.setPixel(w + 1, h, convertPixelToBinary(kernel[1][1], pNext))
+                } else {
+                    result.setPixel(w, h, convertPixelToBinary(kernel[0][0], pCurrent))
+                    result.setPixel(w + 1, h, convertPixelToBinary(kernel[0][1], pNext))
+                }
+
+            }
+        }
+        return result
+    }
+
+    fun binary2(pixels: IntArray, height : Int, kernel: IntArray): IntArray {
+            (0 until pixels.size - 1 step 2).forEach { w ->
+                val pCurrent = pixels[w]
+                val pNext = pixels[w+1]
+                    pixels[w] =  convertPixelToBinary(kernel[0], pCurrent)
+                    pixels[w + 1] =  convertPixelToBinary(kernel[1], pNext)
+            }
+        return pixels
+    }
+
+    private fun convertPixelToBinary(mask: Int, pixel: Int): Int {
+        val R = Color.red(pixel).let { compareWithMask(mask, it) }
+        val B = Color.blue(pixel).let { compareWithMask(mask, it) }
+        val G = Color.green(pixel).let { compareWithMask(mask, it) }
+        return Color.rgb(R, G, B)
+    }
+
+    private fun compareWithMask(mask: Int, pixel: Int) = if (mask != 0  && pixel > 255 / mask) 255 else 0
 }
