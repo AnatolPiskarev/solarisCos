@@ -100,7 +100,7 @@ class ConvolutionMatrix {
         return result
     }
 
-    fun binary2(pixels: IntArray, height : Int, kernel: IntArray): IntArray {
+    fun binary2(pixels: IntArray,  kernel: IntArray): IntArray {
             (0 until pixels.size - 1 step 2).forEach { w ->
                 val pCurrent = pixels[w]
                 val pNext = pixels[w+1]

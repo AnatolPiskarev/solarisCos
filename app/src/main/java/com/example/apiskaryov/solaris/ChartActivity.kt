@@ -16,7 +16,7 @@ class ChartActivity : AppCompatActivity() {
                 }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
-        val graph = findViewById(R.id.graph) as GraphView
+        val graph = findViewById<GraphView>(R.id.graph)
         val series = BarGraphSeries<DataPoint>(data.toTypedArray())
         graph.addSeries(series)
     }

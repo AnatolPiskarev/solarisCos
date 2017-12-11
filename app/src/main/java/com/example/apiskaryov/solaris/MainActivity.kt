@@ -4,8 +4,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import com.example.apiskaryov.solaris.service.ImageService
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var originalImage: Bitmap
     private lateinit var currentImage: Bitmap
     private lateinit var spoonButton: Button
+    private lateinit var plusBtn: FloatingActionButton
+    private lateinit var minusBtn: FloatingActionButton
     private lateinit var mLoaderCallback :BaseLoaderCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,14 +52,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
-        mainBtn = findViewById(R.id.imgBtn) as Button
-        grayBtn = findViewById(R.id.grayBtn) as Button
-        solBtn = findViewById(R.id.SolarBtn) as Button
-        stampBtn = findViewById(R.id.StampBtn) as Button
-        statBtn = findViewById(R.id.StatBtn) as Button
-        originBtn = findViewById(R.id.OrigBtn) as Button
-        binaryBtn = findViewById(R.id.BinaryBtn) as Button
-        spoonButton = findViewById(R.id.SpoonBtn) as Button
+        mainBtn = findViewById<Button>(R.id.imgBtn)
+        grayBtn = findViewById<Button>(R.id.grayBtn)
+        solBtn = findViewById<Button>(R.id.SolarBtn)
+        stampBtn = findViewById<Button>(R.id.StampBtn)
+        statBtn = findViewById<Button>(R.id.StatBtn)
+        originBtn = findViewById<Button>(R.id.OrigBtn)
+        binaryBtn = findViewById<Button>(R.id.BinaryBtn)
+        spoonButton = findViewById<Button>(R.id.SpoonBtn)
+        plusBtn = findViewById<FloatingActionButton>(R.id.tresholdBtnPlus)
+        minusBtn = findViewById<FloatingActionButton>(R.id.tresholdBtnMinus)
         grayBtn.isEnabled = false
         originBtn.isEnabled = false
         solBtn.isEnabled = false
@@ -63,6 +69,8 @@ class MainActivity : AppCompatActivity() {
         statBtn.isEnabled = false
         binaryBtn.isEnabled = false
         spoonButton.isEnabled = false
+        plusBtn.visibility  = View.INVISIBLE
+        minusBtn.visibility = View.INVISIBLE
 
         super.onCreate(savedInstanceState)
         mainBtn.setOnClickListener {
@@ -83,7 +91,8 @@ class MainActivity : AppCompatActivity() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         try {
             if (requestCode == PICK_IMAGE) {
-                val imageView = findViewById(R.id.imgView) as ImageView
+                var tresh = 135.0
+                val imageView = findViewById<ImageView>(R.id.imgView)
                 val uri = data.data
                 originalImage = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
                 currentImage = originalImage
@@ -111,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                     imageView.setImageBitmap(currentImage)
                 }
                 binaryBtn.setOnClickListener {
-                    currentImage = imgService.toBinary2(originalImage)
+                    currentImage = imgService.toBinary2(originalImage, 200.0)
                     imageView.setImageBitmap(currentImage)
                 }
                 originBtn.setOnClickListener {
@@ -119,7 +128,22 @@ class MainActivity : AppCompatActivity() {
                     currentImage = originalImage
                 }
                 spoonButton.setOnClickListener {
-                    currentImage = imgService.toBinary2(originalImage)
+
+                    currentImage = imgService.toBinary2(originalImage, tresh)
+                    imageView.setImageBitmap(currentImage)
+                }
+                plusBtn.setOnClickListener {
+                    if(tresh + 20 < 256) tresh += 20.0 else tresh = 255.0
+                    if(tresh == 255.0) plusBtn.isEnabled = false
+                    if(!minusBtn.isEnabled) minusBtn.isEnabled = true
+                    currentImage = imgService.toBinary2(originalImage, tresh)
+                    imageView.setImageBitmap(currentImage)
+                }
+                minusBtn.setOnClickListener {
+                    if(tresh - 20 > 0) tresh -= 20.0 else tresh = 0.0
+                    if(tresh == 0.0) minusBtn.isEnabled = false
+                    if(!plusBtn.isEnabled) plusBtn.isEnabled = true
+                    currentImage = imgService.toBinary2(originalImage, tresh)
                     imageView.setImageBitmap(currentImage)
                 }
             }

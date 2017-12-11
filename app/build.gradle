@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.example.apiskaryov.solaris"
         minSdkVersion 15
@@ -36,7 +36,10 @@ dependencies {
     compile 'com.jjoe64:graphview:4.2.1'
     testCompile 'junit:junit:4.12'
     compile project(':openCV')
+    compile 'com.android.support:design:26.+'
+    implementation 'com.android.support:design:27.0.0'
 }
 repositories {
     mavenCentral()
+    google()
 }
